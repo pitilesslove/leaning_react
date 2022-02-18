@@ -6,7 +6,11 @@ class Subject extends Component {
       return (
         <header>
           {/* React에는 attribute를 props라고 부른다. */}
-          <h1>{this.props.title}</h1> 
+          <h1><a href="/" onClick={function(e){
+            e.preventDefault();
+            this.props.onChangePage();
+          }.bind(this)}>{this.props.title}</a>
+          </h1> 
           {this.props.sub}
         </header>
       );

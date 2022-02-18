@@ -35,21 +35,16 @@ class App extends Component {
     }
     return (
       <div className="App">
-        {/* <Subject title={this.state.subject.title} sub={this.state.subject.sub}></Subject> */}
-        <header>
-          {/* React에는 attribute를 props라고 부른다. */}
-          <h1><a href="/" onClick={function(e) {  // 이벤트 객체 e를 받는다.
-            console.log(e);
-            e.preventDefault(); // 이게 있으면 기본적으로 refresh하는 동작을 막아버린다.
-            // this.state.mode = 'welcome'; //  이 방법으로는 React가 state가 바뀐지 알아채지 못한다.
-            this.setState( {    // React의 state를 바꾸고싶으면 setState()함수를 사용해야 한다.
-              mode: 'read'
-            })  // onClick()의 리스너에서 this는 자기만의 로컬 바운더리를 가진다.
-            //  그렇기 때문에 부모 객체의 로컬 변수를 가지기 위해서는 bind()함수로 가져와야 한다.
-          }.bind(this)}>{this.state.subject.title}</a></h1>
-
-          {this.props.sub}
-        </header>
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub}
+          onChangePage={function(){
+            this.setState({
+              mode:'read'
+            });
+          }.bind(this)}
+        >
+        </Subject>
         <TOC data={this.state.contents}></TOC>
         <Content title={_title} desc={_desc}></Content>
       </div>
