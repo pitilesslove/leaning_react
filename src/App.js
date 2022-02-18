@@ -35,7 +35,16 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <Subject title={this.state.subject.title} sub={this.state.subject.sub}></Subject>
+        {/* <Subject title={this.state.subject.title} sub={this.state.subject.sub}></Subject> */}
+        <header>
+          {/* React에는 attribute를 props라고 부른다. */}
+          <h1><a href="/" onClick={function(e) {  // 이벤트 객체 e를 받는다.
+            console.log(e);
+            e.preventDefault(); // 이게 있으면 기본적으로 refresh하는 동작을 막아버린다.
+            debugger;         // 개발자 도구를 켜놓았으면, break point가 된다.
+          }}>{this.state.subject.title}</a></h1> 
+          {this.props.sub}
+        </header>
         <TOC data={this.state.contents}></TOC>
         <Content title="HTML" desc="HTML is HyperText Markup Language"></Content>
       </div>
