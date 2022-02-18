@@ -10,7 +10,9 @@ class App extends Component {
 
     // state는 Component의 로컬 변수라고 생각한다.
     this.state = {
+      mode: 'welcome',
       subject: { title:'WEB', sub:'World Wide Web'},
+      welcome: { title:'Welcome', desc:'Hello React!!'},
       contents: [
         {id:1, title:'HTML', desc:'HTML is Hyper Text ...'},
         {id:2, title:'CSS', desc:'CSS is for design ...'},
@@ -19,8 +21,18 @@ class App extends Component {
     }
   }
 
-
+  // state나 props값이 바뀌면, 해당 render()함수가 호출된다.
   render() {
+    console.log('App render');
+    var _title = null;
+    var _desc = null;
+    if(this.state.mode == 'welcome') {
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if( this.state.mode == 'read') {
+      _title = this.state.contents[0].title;
+      _desc = this.state.contents[0].desc;
+    }
     return (
       <div className="App">
         <Subject title={this.state.subject.title} sub={this.state.subject.sub}></Subject>
