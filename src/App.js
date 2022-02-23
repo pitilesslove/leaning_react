@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TOC from './components/TOC';
 import ReadContent from './components/ReadContent';
 import CreateContent from './components/CreateContent';
+import UpdateContent from './components/UpdateContent';
 import Subject from './components/Subject';
 import Control from './components/Control';
 import './App.css';
@@ -23,10 +24,18 @@ class App extends Component {
       ]
     }
   }
+  getReadContent() {
+    var i = 0;
+    while (i < this.state.contents.length) {
+      var data = this.state.contents[i];
+      if (data.id === this.state.selected_content_id) {
+        return data;
+      }
+      i++;
+    }
+  }
 
-  // state나 props값이 바뀌면, 해당 render()함수가 호출된다.
-  render() {
-    console.log('App render');
+  getContent() {
     var _title = null;
     var _desc = null;
     var _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
@@ -34,17 +43,8 @@ class App extends Component {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
     } else if (this.state.mode == 'read') {
-      var i = 0;
-      while (i < this.state.contents.length) {
-        var data = this.state.contents[i];
-        if (data.id === this.state.selected_content_id) {
-          _title = data.title;
-          _desc = data.desc;
-          break;
-        }
-        i++;
-      }
-      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+      var _content = this.getReadContent();
+      _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
     } else if (this.state.mode == "create") {
       _article = <CreateContent onSubmit={function (_title, _desc) {
         // add content to this.state.contents
@@ -60,7 +60,33 @@ class App extends Component {
 
         console.log(_title, _desc);
       }.bind(this)}></CreateContent>;
+    } else if (this.state.mode == "update") {
+      var _content = this.getReadContent();
+      _article = <UpdateContent
+        data={_content}
+        onSubmit={function (_id, _title, _desc) {
+          var _contents = Array.from(this.state.contents);
+          var i = 0;
+          while (i < _contents.length) {
+            if (_contents[i].id === _id) {
+              _contents[i] = { id: _id, title: _title, desc: _desc };
+              break;
+            }
+            i++;
+          }
+          this.setState(  // setState를 호출해 줘야지, 랜더링을 다시 한다.
+            { contents: _contents }
+          );
+
+        }.bind(this)}></UpdateContent>;
     }
+    return _article;
+  }
+
+  // state나 props값이 바뀌면, 해당 render()함수가 호출된다.
+  render() {
+    console.log('App render');
+
     return (
       <div className="App">
         <Subject
@@ -86,7 +112,7 @@ class App extends Component {
             mode: _mode
           })
         }.bind(this)}></Control>
-        {_article}
+        {this.getContent()}
       </div>
     );
   }
