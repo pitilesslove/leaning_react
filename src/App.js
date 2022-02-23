@@ -49,11 +49,13 @@ class App extends Component {
       _article = <CreateContent onSubmit={function (_title, _desc) {
         // add content to this.state.contents
         this.max_content_id++;
-        var _contents = this.state.contents.concat( // conat은 원본을 바꾸지 않기 때문에, 새로운 변수로 담아야 한다.
+        var newContents = Array.from(this.state.contents);  //  Array.from() 이란 함수로, 함수를 복사해서 가져올 수 있다. 
+        // 객체의 경우에는 Object.assign()으로 복사할 수 있다.
+        newContents.push(   //
           { id: this.max_content_id, title: _title, desc: _desc }
         );
         this.setState(  // setState를 호출해 줘야지, 랜더링을 다시 한다.
-          { contents: _contents }
+          { contents: newContents }
         );
 
         console.log(_title, _desc);
