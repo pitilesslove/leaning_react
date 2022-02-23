@@ -13,7 +13,7 @@ class App extends Component {
     this.max_content_id = 3;
     // state는 Component의 로컬 변수라고 생각한다.
     this.state = {
-      mode: 'read',
+      mode: 'welcome',
       selected_content_id: 2,
       subject: { title: 'WEB', sub: 'World Wide Web' },
       welcome: { title: 'Welcome', desc: 'Hello React!!' },
@@ -38,10 +38,11 @@ class App extends Component {
   getContent() {
     var _title = null;
     var _desc = null;
-    var _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+    var _article = null;
     if (this.state.mode == 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode == 'read') {
       var _content = this.getReadContent();
       _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
@@ -75,11 +76,15 @@ class App extends Component {
             i++;
           }
           this.setState(  // setState를 호출해 줘야지, 랜더링을 다시 한다.
-            { contents: _contents }
+            {
+              contents: _contents,
+              mode: 'read'
+            }
           );
 
         }.bind(this)}></UpdateContent>;
     }
+
     return _article;
   }
 
@@ -108,9 +113,28 @@ class App extends Component {
         }.bind(this)}
           data={this.state.contents}></TOC>
         <Control onChangeMode={function (_mode) {
-          this.setState({
-            mode: _mode
-          })
+          if (_mode === 'delete') {
+            if (window.confirm('reallY??')) {
+              var _contents = Array.from(this.state.contents);
+              var i = 0;
+              while (i < this.state.contents.length) {
+                if (_contents[i].id === this.state.selected_content_id) {
+                  _contents.splice(i, 1);
+                  break;
+                }
+                i++;
+              }
+            }
+            this.setState({
+              mode: 'welcome',
+              contents: _contents
+            })
+          }
+          else {
+            this.setState({
+              mode: _mode
+            })
+          }
         }.bind(this)}></Control>
         {this.getContent()}
       </div>
